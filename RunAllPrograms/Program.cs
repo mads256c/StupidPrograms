@@ -36,7 +36,7 @@ namespace RunAllPrograms
         static void Main(string[] args)
         {
             Console.WriteLine(Environment.GetEnvironmentVariable("path"));
-            foreach (string path in (Environment.GetEnvironmentVariable("path") + @";C:\Windows\SysWOW64").Split(separator, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string path in (Environment.GetEnvironmentVariable("path") + @";C:\Windows\SysWOW64\").Split(separator, StringSplitOptions.RemoveEmptyEntries))
             {
                 if (Directory.Exists(path))
                 {
@@ -45,13 +45,12 @@ namespace RunAllPrograms
                             try
                             {
                                 ProcessAsync.RunProcessAsync(file);
+                                Console.WriteLine($"Ran {file}");
                             }
                             catch (Exception)
                             {
 
                             }
-                            //Console.WriteLine($"Ran {file}");
-                            
                     }
                 }
             }
