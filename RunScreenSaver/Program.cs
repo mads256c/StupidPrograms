@@ -2,17 +2,37 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Collections.Generic;
 
 namespace RunScreenSaver
 {
+    public class Value
+    {
+        public Value(object val, RegistryValueKind regvalue)
+        {
+            value = val;
+            valueKind = regvalue;
+        }
+        public object value;
+        public RegistryValueKind valueKind;
+
+    }
+
     static class Program
     {
+        static Dictionary<string, Value> dictionary = new Dictionary<string, Value>()
+        {
+            {"DisplayString", new Value("haha", RegistryValueKind.String) },
+            {"FontFace", new Value("Comic Sans MS", RegistryValueKind.String) },
+            {"DisplayTime", new Value(0, RegistryValueKind.DWord) },
+            {"SurfaceType", new Value(1, RegistryValueKind.DWord) },
+            {"MeshQuality", new Value(0, RegistryValueKind.DWord) },
+        };
         const string SearchDirectory = @"C:\Windows\WinSxs\";
         const string ScreensaverBinary = @"ssText3d.scr";
         const string RegistryPath = @"Software\Microsoft\Windows\CurrentVersion\Screensavers\ssText3d";
 
-        const string ScreensaverText = "haha";
-        const string FontFace = "Comic Sans MS";
+ 
 
         static void Main(string[] args)
         {
@@ -31,11 +51,10 @@ namespace RunScreenSaver
                 }
                 if (key != null)
                 {
-                    key.SetValue("DisplayString", ScreensaverText, RegistryValueKind.String);
-                    key.SetValue("FontFace", FontFace, RegistryValueKind.String);
-                    key.SetValue("DisplayTime", 0, RegistryValueKind.DWord);
-                    key.SetValue("SurfaceType", 1, RegistryValueKind.DWord);
-                    key.SetValue("MeshQuality", 0, RegistryValueKind.DWord);
+                    foreach(KeyValuePair<string, Value> entry in dictionary)
+                    {
+                        key.SetValue(entry.Key, entry.Value.value, entry.Value.valueKind);
+                    }
                 }
                 else
                 {
